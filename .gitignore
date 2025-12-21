@@ -1,0 +1,36 @@
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Virtual environment
+env/
+venv/
+.venv/
+
+# Database
+db.sqlite3
+
+# Media and static files (if served locally and not meant for version control)
+media/
+static/
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Environment variables and sensitive data
+.env
+*.env
+local_settings.py
+
+# Logs
+*.log
+
+# Other temporary or generated files
+*.DS_Store
+*.swp
+*~

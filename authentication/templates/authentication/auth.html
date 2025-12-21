@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account — MaleFashion</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<style>
+:root{
+  --black:#0b0b0b;
+  --white:#ffffff;
+  --gray:#8e8e93;
+  --bg1:#0a0a0a;
+  --bg2:#171717;
+
+  /* luxury leather brown */
+  --brown1:#b08a63;
+  --brown2:#8f6b47;
+  --brown3:#6f5236;
+}
+
+/* ===== SYSTEM FONT ===== */
+*{
+  box-sizing:border-box;
+  -webkit-font-smoothing:antialiased;
+}
+
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Text",
+    "SF Pro Display",
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  background:
+    radial-gradient(900px circle at 15% 20%, #23180f, transparent 50%),
+    radial-gradient(700px circle at 85% 80%, #140e09, transparent 55%),
+    linear-gradient(135deg, var(--bg1), var(--bg2));
+}
+
+/* ===== CARD ===== */
+.card-apple{
+  width:420px;
+  background:rgba(255,255,255,.97);
+  border-radius:30px;
+  padding:46px;
+  box-shadow:
+    0 45px 140px rgba(0,0,0,.5),
+    0 1px 0 rgba(255,255,255,.45) inset;
+  animation:lift 1s cubic-bezier(.22,.8,.22,1);
+}
+
+@keyframes lift{
+  from{opacity:0;transform:translateY(50px) scale(.96)}
+  to{opacity:1;transform:none}
+}
+
+/* ===== BRAND ===== */
+.brand{
+  text-align:center;
+  font-size:13px;
+  letter-spacing:4px;
+  font-weight:600;
+  color:#000;
+  margin-bottom:40px;
+}
+
+/* ===== SEGMENT ===== */
+.segment{
+  display:flex;
+  background:#f2f2f7;
+  border-radius:40px;
+  padding:6px;
+  margin-bottom:34px;
+}
+.segment span{
+  flex:1;
+  text-align:center;
+  padding:12px 0;
+  font-size:13px;
+  font-weight:500;
+  color:var(--gray);
+  cursor:pointer;
+  transition:.35s;
+}
+.segment span.active{
+  background:#fff;
+  color:#000;
+  border-radius:35px;
+  box-shadow:0 5px 16px rgba(0,0,0,.14);
+}
+
+/* ===== INPUT ===== */
+.field{
+  position:relative;
+  margin-bottom:28px;
+}
+.field input{
+  width:100%;
+  padding:15px 16px;
+  border-radius:14px;
+  border:1px solid #e5e5ea;
+  font-size:15px;
+  outline:none;
+  background:#fff;
+  transition:.25s;
+}
+.field input:focus{
+  border-color:var(--brown1);
+  box-shadow:0 0 0 4px rgba(176,138,99,.15);
+}
+.field label{
+  position:absolute;
+  left:16px;
+  top:15px;
+  color:#8e8e93;
+  font-size:14px;
+  pointer-events:none;
+  transition:.25s;
+}
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{
+  top:-8px;
+  background:#fff;
+  padding:0 6px;
+  font-size:11px;
+  color:var(--brown2);
+}
+
+/* ===== REAL BUTTON ===== */
+.btn-apple{
+  width:100%;
+  border:none;
+  border-radius:16px;
+  padding:15px;
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:.3px;
+  color:#fff;
+
+  background:
+    linear-gradient(180deg, var(--brown1), var(--brown2));
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.25),
+    0 1px 0 rgba(255,255,255,.45) inset;
+
+  transition:
+    transform .15s ease,
+    box-shadow .15s ease,
+    background .25s;
+}
+
+.btn-apple:hover{
+  background:
+    linear-gradient(180deg, #c49b72, #9c744f);
+  box-shadow:
+    0 10px 22px rgba(0,0,0,.28),
+    0 1px 0 rgba(255,255,255,.5) inset;
+}
+
+.btn-apple:active{
+  transform:translateY(2px);
+  box-shadow:
+    0 4px 10px rgba(0,0,0,.35),
+    0 0 0 rgba(255,255,255,0) inset;
+  background:
+    linear-gradient(180deg, var(--brown2), var(--brown3));
+}
+
+/* ===== FOOT ===== */
+.foot{
+  margin-top:26px;
+  text-align:center;
+  font-size:12px;
+  color:#8e8e93;
+}
+
+/* ===== UTIL ===== */
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="card-apple">
+
+  <div class="brand">MALE FASHION</div>
+
+  <div class="segment">
+    <span id="loginTab" class="active">Sign In</span>
+    <span id="registerTab">Create ID</span>
+  </div>
+
+  <!-- LOGIN -->
+  <form id="loginForm">
+    <div class="field">
+      <input type="email" required placeholder=" ">
+      <label>Email</label>
+    </div>
+    <div class="field">
+      <input type="password" required placeholder=" ">
+      <label>Password</label>
+    </div>
+    <button class="btn-apple">Continue</button>
+  </form>
+
+  <!-- REGISTER -->
+  <form id="registerForm" class="hidden">
+    <div class="field">
+      <input type="text" required placeholder=" ">
+      <label>Full Name</label>
+    </div>
+    <div class="field">
+      <input type="email" required placeholder=" ">
+      <label>Email</label>
+    </div>
+    <div class="field">
+      <input type="password" id="p1" required placeholder=" ">
+      <label>Password</label>
+    </div>
+    <div class="field">
+      <input type="password" id="p2" required placeholder=" ">
+      <label>Confirm Password</label>
+    </div>
+    <button class="btn-apple">Create Account</button>
+  </form>
+
+  <div class="foot">Designed like a real product</div>
+</div>
+
+<script>
+const loginTab=document.getElementById("loginTab"),
+      registerTab=document.getElementById("registerTab"),
+      loginForm=document.getElementById("loginForm"),
+      registerForm=document.getElementById("registerForm");
+
+loginTab.onclick=()=>{
+  loginTab.classList.add("active");
+  registerTab.classList.remove("active");
+  loginForm.classList.remove("hidden");
+  registerForm.classList.add("hidden");
+};
+
+registerTab.onclick=()=>{
+  registerTab.classList.add("active");
+  loginTab.classList.remove("active");
+  registerForm.classList.remove("hidden");
+  loginForm.classList.add("hidden");
+};
+
+// Apple-like subtle feedback
+document.querySelectorAll("form").forEach(f=>{
+  f.onsubmit=e=>{
+    e.preventDefault();
+    const b=f.querySelector("button");
+    b.innerText="Processing…";
+    setTimeout(()=>b.innerText="Done ✓",900);
+  }
+});
+</script>
+
+</body>
+</html>
