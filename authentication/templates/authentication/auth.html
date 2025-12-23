@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Account — MaleFashion</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
 <style>
@@ -195,46 +194,61 @@ body{
 <body>
 
 <div class="card-apple">
-
   <div class="brand">MALE FASHION</div>
 
   <div class="segment">
     <span id="loginTab" class="active">Sign In</span>
-    <span id="registerTab">Create ID</span>
+    <span id="registerTab">Register</span>
   </div>
 
-  <!-- LOGIN -->
-  <form id="loginForm">
+  <!-- LOGIN FORM -->
+  <form id="loginForm" method="post" action="{% url 'authentication:sign-in' %}">
+    {% csrf_token %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
     <div class="field">
-      <input type="email" required placeholder=" ">
-      <label>Email</label>
+      <input type="text" name="username" required placeholder=" " value="{{ request.POST.username|default:'' }}">
+      <label>Username</label>
     </div>
     <div class="field">
-      <input type="password" required placeholder=" ">
+      <input type="password" name="password" required placeholder=" ">
       <label>Password</label>
     </div>
-    <button class="btn-apple">Continue</button>
+    <button class="btn-apple" type="submit">Continue</button>
   </form>
 
-  <!-- REGISTER -->
-  <form id="registerForm" class="hidden">
+  <!-- REGISTER FORM -->
+  <form id="registerForm" method="post" action="{% url 'authentication:sign-up' %}" class="hidden">
+    {% csrf_token %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
     <div class="field">
-      <input type="text" required placeholder=" ">
+      <input type="text" name="username" required placeholder=" " value="{{ request.POST.username|default:'' }}">
       <label>Full Name</label>
     </div>
     <div class="field">
-      <input type="email" required placeholder=" ">
+      <input type="email" name="email" required placeholder=" " value="{{ request.POST.email|default:'' }}">
       <label>Email</label>
     </div>
     <div class="field">
-      <input type="password" id="p1" required placeholder=" ">
+      <input type="text" name="phone" required placeholder=" " value="{{ request.POST.phone|default:'' }}">
+      <label>Phone</label>
+    </div>
+    <div class="field">
+      <input type="password" name="password1" required placeholder=" ">
       <label>Password</label>
     </div>
     <div class="field">
-      <input type="password" id="p2" required placeholder=" ">
+      <input type="password" name="password2" required placeholder=" ">
       <label>Confirm Password</label>
     </div>
-    <button class="btn-apple">Create Account</button>
+    <button class="btn-apple" type="submit">Create Account</button>
   </form>
 
   <div class="foot">Designed like a real product</div>
@@ -259,16 +273,6 @@ registerTab.onclick=()=>{
   registerForm.classList.remove("hidden");
   loginForm.classList.add("hidden");
 };
-
-// Apple-like subtle feedback
-document.querySelectorAll("form").forEach(f=>{
-  f.onsubmit=e=>{
-    e.preventDefault();
-    const b=f.querySelector("button");
-    b.innerText="Processing…";
-    setTimeout(()=>b.innerText="Done ✓",900);
-  }
-});
 </script>
 
 </body>

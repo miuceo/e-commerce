@@ -35,36 +35,6 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Offcanvas Menu Begin -->
-    <div class="offcanvas-menu-overlay"></div>
-    <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__option">
-            <div class="offcanvas__links">
-                <a href="/auth/login">Sign in</a>
-                <a href="/about">FAQs</a>
-            </div>
-            <div class="offcanvas__top__hover">
-                <span>Usd <i class="arrow_carrot-down"></i></span>
-                <ul>
-                    <li>USD</li>
-                    <li>EUR</li>
-                    <li>USD</li>
-                </ul>
-            </div>
-        </div>
-        <div class="offcanvas__nav__option">
-            <a href="#" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt=""></a>
-            <a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a>
-            <a href="#"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span>0</span></a>
-            <div class="price">$0.00</div>
-        </div>
-        <div id="mobile-menu-wrap"></div>
-        <div class="offcanvas__text">
-            <p>Free shipping, 30-day return or refund guarantee.</p>
-        </div>
-    </div>
-    <!-- Offcanvas Menu End -->
-
     <!-- Header Section Begin -->
     <header class="header">
         <div class="header__top">
@@ -78,16 +48,14 @@
                     <div class="col-lg-6 col-md-5">
                         <div class="header__top__right">
                             <div class="header__top__links">
-                                <a href="#">Sign in</a>
-                                <a href="#">FAQs</a>
-                            </div>
-                            <div class="header__top__hover">
-                                <span>Usd <i class="arrow_carrot-down"></i></span>
-                                <ul>
-                                    <li>USD</li>
-                                    <li>EUR</li>
-                                    <li>USD</li>
-                                </ul>
+                                {% if user.is_authenticated %}
+                                    {% comment %} <a href="{% url 'core:profile' %}">Profile</a> {% endcomment %}
+                                    <a href="{% url 'authentication:logout' %}">Logout</a>
+                                {% else %}
+                                    <a href="{% url 'authentication:sign-in' %}">Sign in</a>
+                                    <a href="{% url 'authentication:sign-up' %}">Register</a>
+                                {% endif %}
+                                <a href="/about">FAQs</a>
                             </div>
                         </div>
                     </div>
@@ -122,7 +90,7 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="/shop"><img src="{% static 'img/icon/search.png' %}" alt=""></a>
+                        <a href="/shop" class="search-switch"><img src="{% static 'img/icon/search.png' %}" alt=""></a>
                         <a href="#"><img src="{% static 'img/icon/heart.png' %}" alt=""></a>
                         <a href="/shopping-cart"><img src="{% static 'img/icon/cart.png' %}" alt=""> <span>0</span></a>
                         <div class="price">$0.00</div>
