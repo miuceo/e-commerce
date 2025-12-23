@@ -158,8 +158,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = "authentication.CustomUser"
 
+LOGIN_URL = "authentication:sign-in"
+LOGIN_REDIRECT_URL = "/"  
+LOGOUT_REDIRECT_URL = "authentication:sign-in"
 
-LOGIN_URL = 'authentication:sing-in'
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'authentication:login'
 

@@ -6,7 +6,6 @@ from .models import CustomUser
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
 
-    # Admin list ko‘rinishi
     list_display = (
         "id",
         "username",
@@ -24,7 +23,6 @@ class CustomUserAdmin(UserAdmin):
         "email",
     )
 
-    # Filterlar
     list_filter = (
         "role",
         "is_staff",
@@ -33,17 +31,14 @@ class CustomUserAdmin(UserAdmin):
         "groups",
     )
 
-    # Search
     search_fields = (
         "username",
         "email",
         "phone",
     )
 
-    # Tartib
     ordering = ("id",)
 
-    # Change form fieldset
     fieldsets = (
         ("Auth Info", {
             "fields": ("username", "password"),
@@ -66,7 +61,6 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    # Add form fieldset
     add_fieldsets = (
         (None, {
             "classes": ("wide",),
@@ -83,6 +77,5 @@ class CustomUserAdmin(UserAdmin):
         }),
     )
 
-    # Unfold uchun qo‘shimcha (optional)
     show_full_result_count = True
     save_on_top = True

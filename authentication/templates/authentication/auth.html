@@ -13,14 +13,12 @@
   --gray:#8e8e93;
   --bg1:#0a0a0a;
   --bg2:#171717;
-
-  /* luxury leather brown */
   --brown1:#b08a63;
   --brown2:#8f6b47;
   --brown3:#6f5236;
 }
 
-/* ===== SYSTEM FONT ===== */
+/* SYSTEM FONT */
 *{
   box-sizing:border-box;
   -webkit-font-smoothing:antialiased;
@@ -28,45 +26,45 @@
 
 body{
   margin:0;
-  height:100vh;
+  min-height:100vh;
   display:flex;
   align-items:center;
   justify-content:center;
   font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "SF Pro Text",
-    "SF Pro Display",
-    "Segoe UI",
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-
+    -apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   background:
     radial-gradient(900px circle at 15% 20%, #23180f, transparent 50%),
     radial-gradient(700px circle at 85% 80%, #140e09, transparent 55%),
     linear-gradient(135deg, var(--bg1), var(--bg2));
 }
 
-/* ===== CARD ===== */
+/* CARD */
 .card-apple{
-  width:420px;
-  background:rgba(255,255,255,.97);
+  width:100%;
+  max-width:480px;
+  max-height:750px;
+  background:rgba(255,255,255,.98);
   border-radius:30px;
-  padding:46px;
-  box-shadow:
-    0 45px 140px rgba(0,0,0,.5),
-    0 1px 0 rgba(255,255,255,.45) inset;
-  animation:lift 1s cubic-bezier(.22,.8,.22,1);
+  padding:40px 35px;
+  box-shadow:0 15px 35px rgba(0,0,0,.2),0 5px 15px rgba(0,0,0,.1) inset;
+  border:1px solid rgba(0,0,0,.05);
+  animation:lift 0.8s cubic-bezier(.22,.8,.22,1) forwards;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow-y:auto;
+}
+
+/* Hover card */
+.card-apple:hover{
+  transform:translateY(-8px);
+  box-shadow:0 25px 60px rgba(0,0,0,.25),0 5px 15px rgba(0,0,0,.1) inset;
 }
 
 @keyframes lift{
-  from{opacity:0;transform:translateY(50px) scale(.96)}
-  to{opacity:1;transform:none}
+  from{opacity:0;transform:translateY(50px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
 }
 
-/* ===== BRAND ===== */
+/* BRAND */
 .brand{
   text-align:center;
   font-size:13px;
@@ -76,13 +74,13 @@ body{
   margin-bottom:40px;
 }
 
-/* ===== SEGMENT ===== */
+/* SEGMENT */
 .segment{
   display:flex;
   background:#f2f2f7;
   border-radius:40px;
   padding:6px;
-  margin-bottom:34px;
+  margin-bottom:30px;
 }
 .segment span{
   flex:1;
@@ -101,10 +99,10 @@ body{
   box-shadow:0 5px 16px rgba(0,0,0,.14);
 }
 
-/* ===== INPUT ===== */
+/* INPUTS */
 .field{
   position:relative;
-  margin-bottom:28px;
+  margin-bottom:20px;
 }
 .field input{
   width:100%;
@@ -138,7 +136,7 @@ body{
   color:var(--brown2);
 }
 
-/* ===== REAL BUTTON ===== */
+/* BUTTON */
 .btn-apple{
   width:100%;
   border:none;
@@ -148,49 +146,42 @@ body{
   font-weight:600;
   letter-spacing:.3px;
   color:#fff;
-
-  background:
-    linear-gradient(180deg, var(--brown1), var(--brown2));
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.25),
-    0 1px 0 rgba(255,255,255,.45) inset;
-
-  transition:
-    transform .15s ease,
-    box-shadow .15s ease,
-    background .25s;
+  background:linear-gradient(180deg,var(--brown1),var(--brown2));
+  box-shadow:0 8px 18px rgba(0,0,0,.25),0 1px 0 rgba(255,255,255,.45) inset;
+  transition:transform .15s ease,box-shadow .15s ease,background .25s;
 }
-
 .btn-apple:hover{
-  background:
-    linear-gradient(180deg, #c49b72, #9c744f);
-  box-shadow:
-    0 10px 22px rgba(0,0,0,.28),
-    0 1px 0 rgba(255,255,255,.5) inset;
+  background:linear-gradient(180deg,#c49b72,#9c744f);
+  box-shadow:0 10px 22px rgba(0,0,0,.28),0 1px 0 rgba(255,255,255,.5) inset;
 }
-
 .btn-apple:active{
   transform:translateY(2px);
-  box-shadow:
-    0 4px 10px rgba(0,0,0,.35),
-    0 0 0 rgba(255,255,255,0) inset;
-  background:
-    linear-gradient(180deg, var(--brown2), var(--brown3));
+  box-shadow:0 4px 10px rgba(0,0,0,.35),0 0 0 rgba(255,255,255,0) inset;
+  background:linear-gradient(180deg,var(--brown2),var(--brown3));
 }
 
-/* ===== FOOT ===== */
+/* ALERTS */
+.alert-container{
+  margin-bottom:20px;
+}
+.alert{
+  font-size:13px;
+  padding:8px 12px;
+  border-radius:10px;
+}
+
+/* FOOT */
 .foot{
-  margin-top:26px;
+  margin-top:20px;
   text-align:center;
   font-size:12px;
   color:#8e8e93;
 }
 
-/* ===== UTIL ===== */
-.hidden{display:none}
+/* UTIL */
+.hidden{display:none;}
 </style>
 </head>
-
 <body>
 
 <div class="card-apple">
@@ -201,14 +192,23 @@ body{
     <span id="registerTab">Register</span>
   </div>
 
+  <!-- ALERTS -->
+  {% if messages %}
+  <div class="alert-container">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
   <!-- LOGIN FORM -->
   <form id="loginForm" method="post" action="{% url 'authentication:sign-in' %}">
     {% csrf_token %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-danger">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
     <div class="field">
       <input type="text" name="username" required placeholder=" " value="{{ request.POST.username|default:'' }}">
       <label>Username</label>
@@ -223,36 +223,57 @@ body{
   <!-- REGISTER FORM -->
   <form id="registerForm" method="post" action="{% url 'authentication:sign-up' %}" class="hidden">
     {% csrf_token %}
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-danger">{{ message }}</div>
-      {% endfor %}
-    {% endif %}
-    <div class="field">
-      <input type="text" name="username" required placeholder=" " value="{{ request.POST.username|default:'' }}">
-      <label>Full Name</label>
+    <h4 class="text-center mb-4">Create Your Account</h4>
+
+    <div class="form-row">
+        <div class="field col-md-6">
+            <input type="text" name="first_name" required placeholder=" " value="{{ request.POST.first_name|default:'' }}">
+            <label>First Name</label>
+        </div>
+        <div class="field col-md-6">
+            <input type="text" name="last_name" required placeholder=" " value="{{ request.POST.last_name|default:'' }}">
+            <label>Last Name</label>
+        </div>
     </div>
+
     <div class="field">
-      <input type="email" name="email" required placeholder=" " value="{{ request.POST.email|default:'' }}">
-      <label>Email</label>
+        <input type="text" name="username" required placeholder=" " value="{{ request.POST.username|default:'' }}">
+        <label>Username</label>
     </div>
+
     <div class="field">
-      <input type="text" name="phone" required placeholder=" " value="{{ request.POST.phone|default:'' }}">
-      <label>Phone</label>
+        <input type="email" name="email" required placeholder=" " value="{{ request.POST.email|default:'' }}">
+        <label>Email</label>
     </div>
+
     <div class="field">
-      <input type="password" name="password1" required placeholder=" ">
-      <label>Password</label>
+        <input type="text" name="phone" required placeholder=" " value="{{ request.POST.phone|default:'' }}">
+        <label>Phone</label>
     </div>
-    <div class="field">
-      <input type="password" name="password2" required placeholder=" ">
-      <label>Confirm Password</label>
+
+    <div class="form-row">
+        <div class="field col-md-6">
+            <input type="password" name="password1" required placeholder=" ">
+            <label>Password</label>
+        </div>
+        <div class="field col-md-6">
+            <input type="password" name="password2" required placeholder=" ">
+            <label>Confirm Password</label>
+        </div>
     </div>
-    <button class="btn-apple" type="submit">Create Account</button>
+
+    <button class="btn-apple mt-3" type="submit">Create Account</button>
+
+    <p class="text-center mt-3 small text-muted">
+        By creating an account, you agree to our <a href="/terms">Terms & Conditions</a>.
+    </p>
   </form>
 
   <div class="foot">Designed like a real product</div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 const loginTab=document.getElementById("loginTab"),
@@ -273,6 +294,13 @@ registerTab.onclick=()=>{
   registerForm.classList.remove("hidden");
   loginForm.classList.add("hidden");
 };
+
+// Auto fade alerts after 5s
+$(document).ready(function(){
+    setTimeout(function(){
+        $(".alert").fadeOut(600);
+    }, 5000);
+});
 </script>
 
 </body>

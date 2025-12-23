@@ -67,4 +67,4 @@ class CustomUser(AbstractUser):
         db_table = "users"
 
     def __str__(self):
-        return self.username
+        return f'{self.username} - {self.role}'
