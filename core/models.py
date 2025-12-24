@@ -1,118 +1,112 @@
 from django.db import models
-from django.conf import settings
+from authentication.models import CustomUser
+from django.utils.text import slugify
+from decimal import Decimal
 
 # Create your models here.
 
-TAX = 0.01
-DELIVERY_PRICE = 0.05
-
 class Category(models.Model):
-    slug = models.SlugField(primary_key=True, max_length=120)
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        verbose_name_plural = "Categories"
-
+    slug = models.SlugField(unique=True, primary_key=True)
+    name = models.CharField(max_length=30, unique=True)
+    image = models.ImageField(upload_to='catgories')
+    
     def __str__(self):
         return self.name
-
-
-class Brand(models.Model):
-    slug = models.SlugField(primary_key=True, max_length=120)
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
-
-class Color(models.Model):
-    name = models.CharField(max_length=50)
-    html_code = models.CharField(max_length=7)
-
-    def __str__(self):
-        return self.name
-
-
+    
 class Size(models.Model):
-    name = models.CharField(max_length=50)
-
+    name = models.CharField(max_length=5, unique=True)
+    
     def __str__(self):
         return self.name
-
-
+        
+class Brand(models.Model):
+    slug = models.SlugField(unique=True, primary_key=True)
+    name = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.name
+    
 class Product(models.Model):
-    slug = models.SlugField(primary_key=True, max_length=200)
-    name = models.CharField(max_length=255)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products")
-    brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="products")
-    description = models.TextField(null=True, blank=True)
-    additional_description = models.TextField(null=True, blank=True)
+    slug = models.SlugField(unique=True, primary_key=True)
+    name = models.CharField(max_length=150)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="products")
+    seller_id = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="products")
+    brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="products")
+    desc = models.TextField(null=True, blank=True)
+    quantity = models.PositiveIntegerField()
+    sizes = models.ManyToManyField(Size, related_name="products")
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    discount = models.PositiveIntegerField(default=0)
-    colors = models.ManyToManyField(Color, blank=True)
-    sizes = models.ManyToManyField(Size, blank=True)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_for_sale = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
-
-class ProductImage(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
-    image = models.ImageField(upload_to="products/")
-    is_main = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.product.name} image"
-
-
-class CartItem(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="cart_items")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
-    size = models.ForeignKey(Size, on_delete=models.SET_NULL, null=True, blank=True)
-    quantity = models.PositiveIntegerField(default=1)
-    order = models.ForeignKey("Order", on_delete=models.CASCADE, null=True, blank=True, related_name="items")
+    main_image = models.ImageField(upload_to="products")
+    discount = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    @property
+    def is_sale(self):
+        return self.discount > 0
+    
+    @property
+    def discounted_price(self):
+        return self.price * Decimal(((100 - self.discount) / 100))
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.name)
+            slug = base_slug
+            counter = 1
 
+            while Product.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
+    
     def __str__(self):
-        return f"{self.product.name} ({self.quantity})"
-
-
+        return self.name
+    
+class ProductImages(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to='products')
+    
+    def __str__(self):
+        return f'{self.product.name} - {self.id}'
+    
 class Order(models.Model):
     STATUS_CHOICES = (
-        ("pending", "Pending"),
-        ("paid", "Paid"),
-        ("shipped", "Shipped"),
-        ("completed", "Completed"),
-        ("cancelled", "Cancelled"),
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('cancelled', 'Cancelled'),
     )
-    PAYMENT_CHOICES = (
-        ("cod", "Cash on Delivery"),
-        ("paypal", "Paypal"),
-    )
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="orders")
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    country = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    address = models.CharField(max_length=255)
-    apartment = models.CharField(max_length=255, blank=True, null=True)
-    postcode = models.CharField(max_length=20)
-    phone = models.CharField(max_length=30)
-    email = models.EmailField()
-    note = models.TextField(blank=True)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
+    country = models.CharField(max_length=50)
+    address = models.CharField(max_length=100)
+    town = models.CharField(max_length=50)
+    postcode = models.PositiveIntegerField()
+    notes = models.CharField(max_length=150, blank=True, null=True)
+    subtotal_price = models.DecimalField(max_digits=12, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
     def __str__(self):
-        return f"Order #{self.id}"
+        return self.user.username    
+    
+    def total_price(self):
+        return self.subtotal_price * Decimal('0.01') + self.subtotal_price * Decimal('0.05')
+
+class CartItem(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="items")
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
+    quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def total_price(self):
+        if self.product.is_sale:
+            return self.quantity * self.product.discounted_price
+        return self.quantity * self.product.price
