@@ -3,36 +3,38 @@
 {% load static %}
 
 {% block title %}
-
 <title>Shopping cart</title>
-
 {% endblock title %}
  
 {% block content %}
-    <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shopping Cart</h4>
-                        <div class="breadcrumb__links">
-                            <a href="/">Home</a>
-                            <a href="/shop">Shop</a>
-                            <span>Shopping Cart</span>
-                        </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="/">Home</a>
+                        <a href="/shop">Shop</a>
+                        <span>Shopping Cart</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Breadcrumb Section End -->
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+
+                <!-- FORM START -->
+                <form method="post" action="{% url 'core:cart-update' %}">
+                    {% csrf_token %}
                     <div class="shopping__cart__table">
                         <table>
                             <thead>
@@ -44,58 +46,87 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <!-- Product -->
+                            {% for item in items %}
                                 <tr>
                                     <td class="product__cart__item">
                                         <div class="product__cart__item__pic">
-                                            <img src="{% static 'img/shopping-cart/cart-1.jpg' %}" alt="">
+                                            <img src="{{ item.product.main_image.url }}" 
+                                                alt="{{ item.product.name }}"
+                                                style="width:80px; height:80px; object-fit:cover; border-radius:4px;">
                                         </div>
                                         <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
+                                            <h6>{{ item.product.name }}</h6>
+                                            <p>Size: {{ item.size }}</p>
                                         </div>
                                     </td>
+
                                     <td class="quantity__item">
                                         <div class="quantity">
                                             <div class="pro-qty-2">
-                                                <input type="text" value="1">
+                                                <input type="number"
+                                                    name="{{ item.id }}"
+                                                    value="{{ item.quantity }}"
+                                                    min="1"
+                                                    max="{{ item.product.quantity }}">
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <!-- Product -->
 
+                                    <td class="cart__price">
+                                        ${{ item.total_price|floatformat:2 }}
+                                    </td>
+
+                                    <td class="cart__close">
+                                        <a href="{% url 'core:cart-delete' item.id %}" 
+                                        style="color:red; cursor:pointer;">
+                                            <i class="fa fa-close"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">No cart items available</td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
-                    <div class="row">
+
+                    <div class="row mt-3">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="continue__btn">
                                 <a href="/shop">Continue Shopping</a>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="/shop-cart"><i class="fa fa-spinner"></i> Update cart</a>
-                            </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 text-end">
+                            <button type="submit" class="continue__btn update__btn">
+                                <i class="fa fa-spinner"></i> Update cart
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="cart__total">
-                        <h6>Cart total</h6>
-                        <ul>
-                            <li>Total <span>$ 169.50</span></li>
-                        </ul>
-                        <a href="/checkout" class="primary-btn">Proceed to checkout</a>
-                    </div>
+                </form>
+                <!-- FORM END -->
+
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__total">
+                    <form method="post" action="{% url 'core:checkout' %}">
+                        {% csrf_token %}
+
+                        {% for item in items %}
+                            <input type="hidden" name="cart_items" value="{{ item.id }}">
+                        {% endfor %}
+
+                        <button type="submit" class="primary-btn">
+                            Proceed to checkout
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Shopping Cart Section End -->
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
 
-    {% endblock content %}
+{% endblock content %}

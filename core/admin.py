@@ -38,7 +38,7 @@ class ProductAdmin(ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(ModelAdmin):
-    list_display = ('id', 'user', 'status', 'subtotal_price', 'total_price', 'created_at')
+    list_display = ('id', 'user', 'status', 'subtotal_price', 'total_price', 'created_at', "payment_model")
     list_filter = ('status', 'country', 'created_at')
     search_fields = ('user__username', 'country', 'town', 'postcode')
     
@@ -47,8 +47,9 @@ class CartItemAdmin(ModelAdmin):
     list_display = ('id', 'user', 'product', 'order', 'quantity', 'total_price_display')
     search_fields = ('user__username', 'product__name', 'order__id')
     list_filter = ('order', 'product')
-    
-    # total_price() metodini admin panelda ko‘rsatish
+
+    @admin.display(description="Total Price")
     def total_price_display(self, obj):
-        return obj.total_price()
+        return obj.total_price
+
     total_price_display.short_description = 'Total Price'

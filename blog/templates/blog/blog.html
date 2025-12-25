@@ -25,18 +25,20 @@
         <div class="container">
             <div class="row">
 
-                <!-- Blogs -->
+                {% for blog in blogs %}
+                <!-- Single blog -->
                 <div class="col-lg-4 col-md-6 col-sm-6">
                     <div class="blog__item">
-                        <div class="blog__item__pic set-bg" data-setbg="{% static 'img/blog/blog-1.jpg' %}"></div>
+                        <div class="blog__item__pic set-bg" data-setbg="{{ blog.image.url }}"></div>
                         <div class="blog__item__text">
-                            <span><img src="{% static 'img/icon/calendar.png' %}" alt=""> 16 February 2020</span>
-                            <h5>What Curling Irons Are The Best Ones</h5>
-                            <a href="/blog-details">Read More</a>
+                            <span><img src="{% static 'img/icon/calendar.png' %}" alt="">{{ blog.created_at|date:"d F Y" }}</span>
+                            <h5>{{ blog.title }}</h5>
+                            <a href="{% url "blog:blog-detail" blog.slug %}">Read More</a>
                         </div>
                     </div>
                 </div>
-                <!-- Blogs -->
+                <!-- End of single blog -->
+                 {% endfor %}
 
             </div>
         </div>

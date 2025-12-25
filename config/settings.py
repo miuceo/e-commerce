@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from environs import Env
+from datetime import datetime, timedelta
 
 env = Env()
 env.read_env()
@@ -30,7 +31,7 @@ SECRET_KEY = env.str("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", "127.0.0.1"]
+ALLOWED_HOSTS = ["*", "127.0.0.1", '192.168.1.24']
 
 
 # Application definition
@@ -47,10 +48,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
+    'rest_framework',
+    'rest_framework_simplejwt',
     'import_export',
     'authentication',
     'core',
     'blog',
+    'api',
 ]
 
 UNFOLD = {
@@ -73,6 +78,11 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://thurman-untransmitted-arnette.ngrok-free.dev",
+]
+
 
 TEMPLATES = [
     {
@@ -159,7 +169,19 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = "authentication.CustomUser"
 
 LOGIN_URL = "authentication:sign-in"
-LOGIN_REDIRECT_URL = "/"  
+LOGIN_REDIRECT_URL = "core:home"  
 LOGOUT_REDIRECT_URL = "authentication:sign-in"
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    )
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=4),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=5),
+    "AUTH_HEADER_TYPES": ('Bearer', "Token"),
+    "TOKEN_USER_CLASS": "authentication.CustomUser",
+}
 

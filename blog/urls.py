@@ -7,5 +7,5 @@ app_name = "blog"
 
 urlpatterns = [
     path('', BlosPageView.as_view(), name='blog'),
-    path('blog-details/', BlogDetailView.as_view(), name='blog-detail')
+    path('blog-details/<str:slug>', BlogDetailView.as_view(), name='blog-detail')
 ]

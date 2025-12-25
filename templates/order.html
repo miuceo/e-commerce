@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+<title>My Orders</title>
+{% endblock title %}
+
+{% block content %}
+<section class="shopping-cart spad">
+    <div class="container">
+        {% if messages %}
+                            <div class="alert-container">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="mb-4">My Orders</h3>
+
+                {% if orders %}
+                <div class="table-responsive">
+                    <table class="table table-bordered text-center align-middle">
+                        <thead class="bg-light">
+    <tr>
+        <th>#</th>
+        <th>Order Date</th>
+        <th>Address</th>
+        <th>Total</th>
+        <th>Payment</th> <!-- qo‘shildi -->
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody>
+{% for order in orders %}
+    <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+            {{ order.country }},
+            {{ order.town }},
+            {{ order.address }}
+        </td>
+        <td>
+            ${{ order.total_price|floatformat:2 }}
+        </td>
+        <td>
+    {% if order.payment_model == 'money' %}
+        <span style="background-color: #FFD700; color: #000; padding: 4px 8px; border-radius: 4px;">Cash</span>
+    {% elif order.payment_model == 'card' %}
+        <span style="background-color: #1E90FF; color: #fff; padding: 4px 8px; border-radius: 4px;">Card</span>
+    {% else %}
+        <span style="background-color: #808080; color: #fff; padding: 4px 8px; border-radius: 4px;">—</span>
+    {% endif %}
+</td>
+
+        <td>
+            {% if order.status == 'pending' %}
+                <span class="badge bg-warning text-dark">Pending</span>
+            {% elif order.status == 'processing' %}
+                <span class="badge bg-primary">Processing</span>
+            {% elif order.status == 'completed' %}
+                <span class="badge bg-success">Completed</span>
+            {% elif order.status == 'cancelled' %}
+                <span class="badge bg-danger">Cancelled</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if order.status == 'pending' or order.status == 'processing' %}
+                <form method="post" action="{% url 'core:order-delete' order.id  %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-danger"
+                        onclick="return confirm('Are you sure you want to cancel this order?');">
+                        Cancel
+                    </button>
+                </form>
+            {% else %}
+                <span class="text-muted">—</span>
+            {% endif %}
+        </td>
+    </tr>
+{% endfor %}
+</tbody>
+
+                    </table>
+                </div>
+                {% else %}
+                    <p>You have no orders yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -80,6 +80,10 @@ class Order(models.Model):
         ('completed', 'Completed'),
         ('cancelled', 'Cancelled'),
     )
+    PAYMENT = (
+        ("card", "Card"),
+        ('money', 'Money')
+    )
     
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='orders')
     country = models.CharField(max_length=50)
@@ -89,6 +93,7 @@ class Order(models.Model):
     notes = models.CharField(max_length=150, blank=True, null=True)
     subtotal_price = models.DecimalField(max_digits=12, decimal_places=2)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    payment_model = models.CharField(max_length=30, choices=PAYMENT, default=PAYMENT[1])
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -96,17 +101,19 @@ class Order(models.Model):
         return self.user.username    
     
     def total_price(self):
-        return self.subtotal_price * Decimal('0.01') + self.subtotal_price * Decimal('0.05')
+        return self.subtotal_price + (self.subtotal_price * Decimal('0.01') + self.subtotal_price * Decimal('0.05'))
 
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="items")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="items")
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items', null=True, blank=True)
     quantity = models.PositiveIntegerField()
+    size = models.CharField(max_length=10)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
+    @property
     def total_price(self):
-        if self.product.is_sale:
-            return self.quantity * self.product.discounted_price
-        return self.quantity * self.product.price
+        price = self.product.discounted_price if self.product.is_sale else self.product.price
+        return price * Decimal(self.quantity)
+

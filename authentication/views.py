@@ -15,14 +15,13 @@ def signin_view(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        user = CustomUser.objects.filter(username=username).first()
-        if not user:
-            messages.info(request, "User not found")
-        if not user.password == password:
-            messages.info(request, "Password is incorrect")
+        user = authenticate(request, username=username, password=password)
+        if user is None:
+            messages.info(request, "User not found or password is incorrect!")
+            return redirect("authentication:sign-in")
+            
         login(request, user)
-        
-        return redirect("home")
+        return redirect("core:home")
         
     return render(request, "authentication/auth.html")
 
@@ -32,7 +31,7 @@ def logout_view(request):
 
 def signup_view(request):
     if request.user.is_authenticated:
-        return redirect('core:home')  # agar foydalanuvchi login bo'lsa, home ga redirect
+        return redirect('core:home')
 
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
