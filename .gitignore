@@ -15,16 +15,16 @@ venv/
 db.sqlite3
 
 # Media and static files (if served locally and not meant for version control)
-media/
-static/
+# media/
+# static/
 
 # IDE-specific files
 .idea/
 .vscode/
 
 # Environment variables and sensitive data
-.env
-*.env
+# .env
+# *.env
 local_settings.py
 
 # Logs
