@@ -388,7 +388,7 @@ class AdminSizeView(viewsets.ModelViewSet):
 
 class SellerProductView(viewsets.ModelViewSet):
     permission_classes = [SellerProductPermission]
-    queryset = get_list_or_404(Product)
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = "slug"
     
