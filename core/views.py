@@ -291,7 +291,7 @@ def deleteorder(request, id):
         item.quantity = 0
         item.save()
         
-    order.status = 'canceled'
+    order.status = 'cancelled'
     order.save()
     
     
