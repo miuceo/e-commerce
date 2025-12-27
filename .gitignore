@@ -12,7 +12,7 @@ venv/
 .venv/
 
 # Database
-db.sqlite3
+# db.sqlite3
 
 # Media and static files (if served locally and not meant for version control)
 # media/
