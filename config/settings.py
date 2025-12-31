@@ -80,10 +80,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://thurman-untransmitted-arnette.ngrok-free.dev",
-]
-
 
 TEMPLATES = [
     {
