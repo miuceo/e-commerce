@@ -17,6 +17,7 @@ db.sqlite3
 # Media and static files (if served locally and not meant for version control)
 media/
 static/
+staticfiles/
 
 # IDE-specific files
 .idea/
