@@ -1,244 +1,167 @@
 {% extends "base.html" %}
+
 {% load static %}
+
+{% block links %}
+
+    <div class="col-lg-6 col-md-6">
+        <nav class="header__menu mobile-menu">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active"><a href="/shop">Shop</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li><a href="/shopping-cart">Shopping Cart</a></li>
+                <li><a href="/blog">Blog</a></li>
+                <li><a href="/contact">Contacts</a></li>
+            </ul>
+        </nav>
+    </div>
+
+{% endblock links %}
 
 {% block title %}
 <title>Male-Fashion | Shop</title>
 {% endblock title %}
 
+
 {% block content %}
 
-<section class="breadcrumb py-3 bg-light">
-    <div class="container d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">Shop</h4>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb mb-0 bg-light p-0">
-                <li class="breadcrumb-item"><a href="/">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Shop</li>
-            </ol>
-        </nav>
-    </div>
-</section>
-
-<section class="shop py-5">
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-        <div class="row">
-            <!-- Sidebar Filters -->
-            <aside class="col-lg-3 mb-4">
-                <div class="bg-white p-3 rounded shadow-sm">
-                    <!-- Search -->
-                    <form method="get" action="{% url 'core:shop' %}" class="mb-4">
-                        <div class="input-group">
-                            <input type="text" name="q" class="form-control" placeholder="Search..." value="{{ request.GET.q }}">
-                            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-                        </div>
-                    </form>
-
-                    <!-- Categories -->
-                    <div class="mb-3">
-                        <h6 class="fw-bold">Categories</h6>
-                        <ul class="list-unstyled ps-0">
-                            {% for category in categories %}
-                                <li>
-                                    <a href="{% url 'core:shop' %}?category={{ category.slug }}" class="d-block py-1 {% if selected_category == category.slug %}fw-bold text-primary{% endif %}">
-                                        {{ category.name|title }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <!-- Brands -->
-                    <div class="mb-3">
-                        <h6 class="fw-bold">Brands</h6>
-                        <ul class="list-unstyled ps-0">
-                            {% for brand in brands %}
-                                <li>
-                                    <a href="{% url 'core:shop' %}?brand={{ brand.slug }}" class="d-block py-1 {% if selected_brand == brand.slug %}fw-bold text-primary{% endif %}">
-                                        {{ brand.name|title }}
-                                    </a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="mb-3">
-                        <h6 class="fw-bold">Price</h6>
-                        <ul class="list-unstyled ps-0">
-                            <li><a href="{% url 'core:shop' %}?price=0-50" class="d-block py-1 {% if selected_price == '0-50' %}fw-bold text-primary{% endif %}">$0 - $50</a></li>
-                            <li><a href="{% url 'core:shop' %}?price=50-100" class="d-block py-1 {% if selected_price == '50-100' %}fw-bold text-primary{% endif %}">$50 - $100</a></li>
-                            <li><a href="{% url 'core:shop' %}?price=100-150" class="d-block py-1 {% if selected_price == '100-150' %}fw-bold text-primary{% endif %}">$100 - $150</a></li>
-                            <li><a href="{% url 'core:shop' %}?price=150-200" class="d-block py-1 {% if selected_price == '150-200' %}fw-bold text-primary{% endif %}">$150 - $200</a></li>
-                            <li><a href="{% url 'core:shop' %}?price=200-250" class="d-block py-1 {% if selected_price == '200-250' %}fw-bold text-primary{% endif %}">$200 - $250</a></li>
-                            <li><a href="{% url 'core:shop' %}?price=250" class="d-block py-1 {% if selected_price == '250' %}fw-bold text-primary{% endif %}">$250+</a></li>
-                        </ul>
-                    </div>
-
-                    <!-- Size -->
-                    <div>
-                        <h6 class="fw-bold">Size</h6>
-                        <div class="d-flex flex-wrap gap-2">
-                            {% for size in sizes %}
-                                <form method="get" action="{% url 'core:shop' %}">
-                                    <input type="hidden" name="size" value="{{ size.id }}">
-                                    <button type="submit" class="btn btn-outline-secondary btn-sm {% if selected_size == size.id|stringformat:'s' %}active fw-bold{% endif %}">
-                                        {{ size.name }}
-                                    </button>
-                                </form>
-                            {% endfor %}
-                        </div>
-                    </div>
-
-                </div>
-            </aside>
-
-            <!-- Products Grid -->
-            <div class="col-lg-9">
-                <div class="row g-4">
-                    {% for product in products %}
-                        <div class="col-md-4 col-sm-6">
-                            <div class="card h-100 shadow-sm">
-                                <div class="position-relative">
-                                    <img src="{{ product.main_image.url }}" class="card-img-top" alt="{{ product.name }}">
-                                    {% if product.is_sale %}
-                                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">Sale</span>
-                                    {% else %}
-                                        <span class="badge bg-success position-absolute top-0 start-0 m-2">New</span>
-                                    {% endif %}
-                                </div>
-                                <div class="card-body text-center">
-                                    <h6 class="card-title">{{ product.name }}</h6>
-                                    {% if product.is_sale %}
-                                        <p class="text-muted mb-1"><del class="text-danger">${{ product.price }}</del></p>
-                                        <p class="text-success fw-bold mb-2">${{ product.discounted_price|floatformat:2 }}</p>
-                                    {% else %}
-                                        <p class="fw-bold mb-2">${{ product.price|floatformat:2 }}</p>
-                                    {% endif %}
-                                    <p class="small text-muted">Available: {{ product.quantity }}</p>
-                                    <a href="{% url "core:shop-detail" product.slug %}" class="btn btn-primary btn-sm w-100">+ Add to Cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-
-                <!-- Pagination -->
-                <nav class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        {% if page_obj.has_previous %}
-                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                        {% endif %}
-                        {% for num in page_obj.paginator.page_range %}
-                            {% if page_obj.number == num %}
-                                <li class="page-item active"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-                                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-                            {% endif %}
-                        {% endfor %}
-                        {% if page_obj.has_next %}
-                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                        {% endif %}
-                    </ul>
-                </nav>
-
-            </div>
+<!-- Breadcrumb -->
+<section style="padding:16px;background:#f5f5f7">
+    <div style="display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:auto">
+        <h4 style="margin:0">Shop</h4>
+        <div>
+            <a href="/" style="color:#007aff;text-decoration:none">Home</a> /
+            <span style="color:#666">Shop</span>
         </div>
     </div>
 </section>
 
-<style>
-/* Apple style font for cards */
-.card, .card * {
-    font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
+<section style="padding:40px 0">
+<div style="max-width:1200px;margin:auto;display:flex;gap:24px">
 
-/* Card styling */
-.card {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background-color: #fff;
-}
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
+<!-- SIDEBAR -->
+<aside style="width:260px">
+<div style="background:#fff;padding:16px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08)">
 
-/* Product image */
-.card .card-img-top {
-    border-radius: 16px 16px 0 0;
-    object-fit: cover;
-    height: 220px;
-}
+<!-- Search -->
+<form method="get" action="{% url 'core:shop' %}" style="margin-bottom:20px">
+    <input type="text" name="q" value="{{ request.GET.q }}"
+           placeholder="Search..."
+           style="width:100%;padding:10px 14px;border-radius:12px;border:1px solid #ddd">
+</form>
 
-/* Badges */
-.card .badge {
-    border-radius: 12px;
-    font-weight: 600;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-}
-.card .badge.bg-danger { background-color: #ff3b30; }
-.card .badge.bg-success { background-color: #34c759; }
+<!-- Categories -->
+<h6 style="margin-bottom:10px">Categories</h6>
+{% for category in categories %}
+<a href="{% url 'core:shop' %}?category={{ category.slug }}"
+   style="
+     display:block;
+     margin-bottom:6px;
+     padding:6px 12px;
+     border-radius:10px;
+     text-decoration:none;
+     font-weight:500;
+     color:{% if selected_category == category.slug %}#fff{% else %}#111{% endif %};
+     background:{% if selected_category == category.slug %}linear-gradient(145deg,#007aff,#0056b3){% else %}transparent{% endif %};
+   "
+   onmouseover="this.style.background='#f2f2f7';this.style.color='#007aff'"
+   onmouseout="this.style.background='{% if selected_category == category.slug %}linear-gradient(145deg,#007aff,#0056b3){% else %}transparent{% endif %}';this.style.color='{% if selected_category == category.slug %}#fff{% else %}#111{% endif %}'"
+>
+{{ category.name|title }}
+</a>
+{% endfor %}
 
-/* Card body */
-.card-body {
-    text-align: center;
-    padding: 1rem;
-}
-.card-body h6 {
-    font-size: 1rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-    color: #111;
-}
-.card-body .fw-bold {
-    color: #007aff;
-}
-.card-body del {
-    color: #ff3b30;
-    margin-right: 0.25rem;
-}
-.card-body .small {
-    font-size: 0.85rem;
-    color: #666;
-    margin-bottom: 0.75rem;
-}
+<!-- Brands -->
+<h6 style="margin:20px 0 10px">Brands</h6>
+{% for brand in brands %}
+<a href="{% url 'core:shop' %}?brand={{ brand.slug }}"
+   style="
+     display:block;
+     margin-bottom:6px;
+     padding:6px 12px;
+     border-radius:10px;
+     text-decoration:none;
+     font-weight:500;
+     color:{% if selected_brand == brand.slug %}#fff{% else %}#111{% endif %};
+     background:{% if selected_brand == brand.slug %}linear-gradient(145deg,#34c759,#248a3d){% else %}transparent{% endif %};
+   "
+>
+{{ brand.name|title }}
+</a>
+{% endfor %}
 
-/* Add to cart button */
-.card-body .btn {
-    border-radius: 24px;
-    padding: 0.5rem 1.5rem;
-    background: linear-gradient(145deg, #007aff, #0056b3);
-    color: #fff;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    text-decoration: none;
-    display: inline-block;
-}
-.card-body .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    background: linear-gradient(145deg, #0056b3, #007aff);
-}
+<!-- Size -->
+<h6 style="margin:20px 0 10px">Size</h6>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+{% for size in sizes %}
+<form method="get" action="{% url 'core:shop' %}">
+<input type="hidden" name="size" value="{{ size.id }}">
+<button type="submit"
+ style="
+  padding:6px 16px;
+  border-radius:20px;
+  border:1px solid #d1d1d6;
+  background:{% if selected_size == size.id|stringformat:'s' %}#007aff{% else %}#fff{% endif %};
+  color:{% if selected_size == size.id|stringformat:'s' %}#fff{% else %}#111{% endif %};
+ ">
+{{ size.name }}
+</button>
+</form>
+{% endfor %}
+</div>
 
-/* Responsive image fix */
-@media(max-width: 576px){
-    .card .card-img-top {
-        height: 180px;
-    }
-}
-</style>
 
+</div>
+</aside>
+
+<!-- PRODUCTS -->
+<div style="flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px">
+
+{% for product in products %}
+<div style="
+ background:#fff;
+ border-radius:18px;
+ overflow:hidden;
+ box-shadow:0 6px 18px rgba(0,0,0,.1);
+ transition:.3s
+">
+<img src="{{ product.main_image.url }}"
+     style="width:100%;height:220px;object-fit:cover">
+
+<div style="padding:16px;text-align:center">
+<h6 style="margin-bottom:6px">{{ product.name }}</h6>
+
+{% if product.is_sale %}
+<div style="color:#ff3b30"><del>${{ product.price }}</del></div>
+<div style="color:#007aff;font-weight:600">
+${{ product.discounted_price|floatformat:2 }}
+</div>
+{% else %}
+<div style="font-weight:600;color:#007aff">
+${{ product.price|floatformat:2 }}
+</div>
+{% endif %}
+
+<a href="{% url 'core:shop-detail' product.slug %}"
+   style="
+    display:inline-block;
+    margin-top:10px;
+    padding:8px 18px;
+    border-radius:999px;
+    background:linear-gradient(145deg,#007aff,#0056b3);
+    color:#fff;
+    text-decoration:none;
+    font-weight:600;
+   ">
+Add to Cart
+</a>
+</div>
+</div>
+{% endfor %}
+
+</div>
+</div>
+</section>
 
 {% endblock content %}

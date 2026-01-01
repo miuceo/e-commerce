@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", "e-commerce.miuceo.uz", "165.22.66.251"]
 
@@ -157,11 +157,16 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = "/var/www/ecommerce/staticfiles/"
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+# STATIC_ROOT = "/var/www/ecommerce/staticfiles/"
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = "/var/www/ecommerce/media/"
+MEDIA_ROOT = "media/"
+# MEDIA_ROOT = "/var/www/ecommerce/media/"
 
 AUTH_USER_MODEL = "authentication.CustomUser"
 
